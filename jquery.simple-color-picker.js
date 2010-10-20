@@ -30,7 +30,7 @@ $.fn.simpleColorPicker = function(options) {
             if (i % opts.colorsPerLine == 0)
                 breakLine = 'clear: both; ';
 
-            if (i > 0 && breakLine && $.browser && $.browser.msie && $.browser.version == 7) {
+            if (i > 0 && breakLine && $.browser && $.browser.msie && $.browser.version <= 7) {
                 breakLine = '';
                 colorsMarkup += '<li style="float: none; clear: both; overflow: hidden; background-color: #fff; display: block; height: 1px; line-height: 1px; font-size: 1px; margin-bottom: -2px;"></li>';
             }
