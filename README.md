@@ -27,3 +27,9 @@ Just attach the simpleColorPicker to an input text and when it gains focus the c
         var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
         $('input#color3').simpleColorPicker({ colors: colors });
     });
+
+#### Effects
+
+    $(document).ready(function() {
+        $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
+    });

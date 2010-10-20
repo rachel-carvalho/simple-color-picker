@@ -23,6 +23,7 @@
             $('input#color2').simpleColorPicker({ colorsPerLine: 16 });
 			var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
             $('input#color3').simpleColorPicker({ colors: colors });
+            $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
         });
     </script>
 </head>
@@ -71,6 +72,18 @@ $(document).ready(function() {
 $(document).ready(function() {
     var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
     $('input#color3').simpleColorPicker({ colors: colors });
+});
+			</pre>
+		</li>
+		<li>
+			<h3>Effects</h3>
+
+			<label for="color4">Choose a color:</label>
+			<input type="text" id="color4" name="color4" />
+
+			<pre>
+$(document).ready(function() {
+    $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
 });
 			</pre>
 		</li>
