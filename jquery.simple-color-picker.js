@@ -1,4 +1,4 @@
-﻿
+
 $.fn.simpleColorPicker = function(options) {
     var defaults = {
         colorsPerLine: 8,
@@ -65,6 +65,9 @@ $.fn.simpleColorPicker = function(options) {
             var left = pos.left + txt.outerWidth() - box.outerWidth();
             if (left < pos.left) left = pos.left;
             box.css({ left: left, top: (pos.top + txt.outerHeight()) });
+            if (!!opts.zIndex) {
+              box.css('zIndex',opts.zIndex);
+            }
             showBox(box);
         });
 

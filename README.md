@@ -33,3 +33,11 @@ Just attach the simpleColorPicker to an input text and when it gains focus the c
     $(document).ready(function() {
         $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
     });
+
+
+#### z-index
+
+    $(document).ready(function() {
+				var zIndex = $('input#color5').closest('li').css('zIndex');
+				$('input#color5').simpleColorPicker({zIndex : zIndex + 1});
+    });
