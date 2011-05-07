@@ -33,3 +33,9 @@ Just attach the simpleColorPicker to an input text and when it gains focus the c
     $(document).ready(function() {
         $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
     });
+
+#### Non-input elements
+
+    $(document).ready(function() {
+        $('button#color5').simpleColorPicker({ onChangeColor: function(color) { $('label#color-result').text(color); } });
+    });

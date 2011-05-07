@@ -21,9 +21,10 @@
         $(document).ready(function() {
             $('input#color').simpleColorPicker();
             $('input#color2').simpleColorPicker({ colorsPerLine: 16 });
-			var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
+            var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
             $('input#color3').simpleColorPicker({ colors: colors });
             $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
+            $('button#color5').simpleColorPicker({ onChangeColor: function(color) { $('label#color-result').text(color); } });
         });
     </script>
 </head>
@@ -84,6 +85,18 @@ $(document).ready(function() {
 			<pre>
 $(document).ready(function() {
     $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
+});
+			</pre>
+		</li>
+		<li>
+			<h3>Non-input elements</h3>
+
+			<label id="color-result">No color chosen yet</label>
+			<button id="color5">Choose a color</button>
+
+			<pre>
+$(document).ready(function() {
+    $('button#color5').simpleColorPicker({ onChangeColor: function(color) { $('label#color-result').text(color); } });
 });
 			</pre>
 		</li>

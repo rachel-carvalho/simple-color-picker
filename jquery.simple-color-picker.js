@@ -25,9 +25,9 @@ $.fn.simpleColorPicker = function(options) {
         var prefix = txt.attr('id').replace(/-/, '') + '_';
 
         for(var i = 0; i < opts.colors.length; i++){
-			var item = opts.colors[i];
+            var item = opts.colors[i];
 
-			var breakLine = '';
+            var breakLine = '';
             if (i % opts.colorsPerLine == 0)
                 breakLine = 'clear: both; ';
 
@@ -37,7 +37,7 @@ $.fn.simpleColorPicker = function(options) {
             }
 
             colorsMarkup += '<li id="' + prefix + 'color-' + i + '" class="color-box" style="' + breakLine + 'background-color: ' + item + '" title="' + item + '"></li>';
-		}
+        }
 
         var box = $('<div id="' + prefix + 'color-picker" class="color-picker" style="position: absolute; left: 0px; top: 0px;"><ul>' + colorsMarkup + '</ul><div style="clear: both;"></div></div>');
         $('body').append(box);
