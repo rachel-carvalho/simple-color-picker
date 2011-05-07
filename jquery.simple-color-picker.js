@@ -11,7 +11,8 @@ $.fn.simpleColorPicker = function(options) {
 				, '#990000', '#b45f06', '#bf9000', '#38761d', '#134f5c', '#0b5394', '#351c75', '#741b47'
 				, '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#073763', '#20124d', '#4C1130'],
         showEffect: '',
-        hideEffect: ''
+        hideEffect: '',
+        onChangeColor: false
     };
 
     var opts = $.extend(defaults, options);
@@ -24,9 +25,9 @@ $.fn.simpleColorPicker = function(options) {
         var prefix = txt.attr('id').replace(/-/, '') + '_';
 
         for(var i = 0; i < opts.colors.length; i++){
-			var item = opts.colors[i];
+            var item = opts.colors[i];
 
-			var breakLine = '';
+            var breakLine = '';
             if (i % opts.colorsPerLine == 0)
                 breakLine = 'clear: both; ';
 
@@ -36,19 +37,24 @@ $.fn.simpleColorPicker = function(options) {
             }
 
             colorsMarkup += '<li id="' + prefix + 'color-' + i + '" class="color-box" style="' + breakLine + 'background-color: ' + item + '" title="' + item + '"></li>';
-		}
+        }
 
         var box = $('<div id="' + prefix + 'color-picker" class="color-picker" style="position: absolute; left: 0px; top: 0px;"><ul>' + colorsMarkup + '</ul><div style="clear: both;"></div></div>');
         $('body').append(box);
         box.hide();
 
         box.find('li.color-box').click(function() {
-            txt.val(opts.colors[this.id.substr(this.id.indexOf('-') + 1)]);
-            txt.blur();
+            if (!txt.is('input')) {
+              txt.val(opts.colors[this.id.substr(this.id.indexOf('-') + 1)]);
+              txt.blur();
+            }
+            if ($.isFunction(defaults.onChangeColor)) {
+              defaults.onChangeColor.call(txt, opts.colors[this.id.substr(this.id.indexOf('-') + 1)]);
+            }
             hideBox(box);
         });
 
-        $('body').click(function() {
+        $('body').live('click', function() {
             hideBox(box);
         });
 
@@ -56,16 +62,24 @@ $.fn.simpleColorPicker = function(options) {
             event.stopPropagation();
         });
 
+        var positionAndShowBox = function(box) {
+          var pos = txt.offset();
+          var left = pos.left + txt.outerWidth() - box.outerWidth();
+          if (left < pos.left) left = pos.left;
+          box.css({ left: left, top: (pos.top + txt.outerHeight()) });
+          showBox(box);
+        }
+
         txt.click(function(event) {
-            event.stopPropagation();
+          event.stopPropagation();
+          if (!txt.is('input')) {
+            // element is not an input so probably a link or div which requires the color box to be shown
+            positionAndShowBox(box);
+          }
         });
 
         txt.focus(function() {
-            var pos = txt.offset();
-            var left = pos.left + txt.outerWidth() - box.outerWidth();
-            if (left < pos.left) left = pos.left;
-            box.css({ left: left, top: (pos.top + txt.outerHeight()) });
-            showBox(box);
+          positionAndShowBox(box);
         });
 
         function hideBox(box) {
