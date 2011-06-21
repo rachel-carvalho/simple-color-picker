@@ -22,7 +22,7 @@ $.fn.simpleColorPicker = function(options) {
 
         var colorsMarkup = '';
 
-        var prefix = txt.attr('id').replace(/-/, '') + '_';
+        var prefix = String(txt.attr('id')).replace(/-/, '') + '_';
 
         for(var i = 0; i < opts.colors.length; i++){
 			var item = opts.colors[i];
