@@ -68,7 +68,7 @@ $.fn.simpleColorPicker = function(options) {
           if (left < pos.left) left = pos.left;
           box.css({ left: left, top: (pos.top + txt.outerHeight()) });
           showBox(box);
-        }
+        };
 
         txt.click(function(event) {
           event.stopPropagation();
