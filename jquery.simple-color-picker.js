@@ -104,6 +104,10 @@ $.fn.simpleColorPicker = function(options) {
         elem.focus(function() {
           positionAndShowBox(box);
         });
+        
+        elem.blur(function(event) {
+            hideBox(box);
+        });
 
         function hideBox(box) {
             if (opts.hideEffect == 'fade')
