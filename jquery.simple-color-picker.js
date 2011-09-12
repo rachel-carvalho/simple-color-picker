@@ -11,6 +11,7 @@ $.fn.simpleColorPicker = function(options) {
                   '#f3f3f3', '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#073763', '#20124d', '#4C1130'],
         showEffect: '',
         hideEffect: '',
+        effectDuration: 'fast',
         onChangeColor: false,
         ieHackListItem: '<li style="float: none; clear: both; overflow: hidden; background-color: #fff; display: block; height: 1px; line-height: 1px; font-size: 1px; margin-bottom: -2px;"></li>',
         templates: {
@@ -26,44 +27,7 @@ $.fn.simpleColorPicker = function(options) {
             colorsMarkup = '',
             prefix = String(elem.attr('id')).replace(/-/g, '') + '_';
         
-        var colorToHSL = function (color) {
-            var rgb, min, max, delta, h, s, l;
-            if (color.length == 7) {
-                rgb = [parseInt(color.substring(1, 3), 16) / 255,
-                        parseInt(color.substring(3, 5), 16) / 255,
-                        parseInt(color.substring(5, 7), 16) / 255];
-            } else if (color.length == 4) {
-                rgb = [parseInt(color.substring(1, 2), 16) / 15,
-                        parseInt(color.substring(2, 3), 16) / 15,
-                        parseInt(color.substring(3, 4), 16) / 15];
-            }
-            
-            var r = rgb[0], 
-                g = rgb[1], 
-                b = rgb[2];
-            min = Math.min(r, Math.min(g, b));
-            max = Math.max(r, Math.max(g, b));
-            delta = max - min;
-            l = (min + max) / 2;
-            s = 0;
-            if (l > 0 && l < 1) {
-                s = delta / (l < 0.5 ? (2 * l) : (2 - 2 * l));
-            }
-            h = 0;
-            if (delta > 0) {
-                if (max == r && max != g) {
-                    h += (g - b) / delta;
-                }
-                if (max == g && max != b) {
-                    h += (2 + (b - r) / delta);
-                }
-                if (max == b && max != r) {
-                    h += (4 + (r - g) / delta);
-                }
-                h /= 6;
-            }
-            return [h, s, l];
-        };
+       
         
         for (var i = 0; i < opts.colors.length; i++) {
             var color = opts.colors[i],
@@ -98,16 +62,18 @@ $.fn.simpleColorPicker = function(options) {
         box.find('li.color-box').click(function() {
             var selected_color = opts.colors[this.id.substr(this.id.indexOf('-') + 1)];
             if (elem.is('input')) {
-              elem.val(selected_color);
-              elem.blur();
+                elem.val(selected_color);
+                elem.blur();
             }
             if ($.isFunction(defaults.onChangeColor)) {
-              defaults.onChangeColor.call(elem, selected_color);
+                try {
+                    defaults.onChangeColor.call(elem, selected_color);
+                } catch (e) {
+                    if (console && console.log) {
+                        console.log("ERROR @ onChangeColor:", e);
+                    }
+                }
             }
-            elem.css({
-                "background-color": selected_color,
-                "color": colorToHSL(selected_color)[2] > 0.5 ? '#000' : '#fff'
-            });
             hideBox(box);
         });
 
@@ -141,18 +107,18 @@ $.fn.simpleColorPicker = function(options) {
 
         function hideBox(box) {
             if (opts.hideEffect == 'fade')
-                box.fadeOut();
+                box.fadeOut(opts.effectDuration);
             else if (opts.hideEffect == 'slide')
-                box.slideUp();
+                box.slideUp(opts.effectDuration);
             else
                 box.hide();
         }
 
         function showBox(box) {
             if (opts.showEffect == 'fade') {
-                box.fadeIn();
+                box.fadeIn(opts.effectDuration);
             } else if (opts.showEffect == 'slide') {
-                box.slideDown();
+                box.slideDown(opts.effectDuration);
             } else {
                 box.show();
             }
