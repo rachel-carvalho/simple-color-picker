@@ -27,8 +27,6 @@ $.fn.simpleColorPicker = function(options) {
             colorsMarkup = '',
             prefix = String(elem.attr('id')).replace(/-/g, '') + '_';
         
-       
-        
         for (var i = 0; i < opts.colors.length; i++) {
             var color = opts.colors[i],
                 breakline = '';
@@ -76,46 +74,36 @@ $.fn.simpleColorPicker = function(options) {
             }
             hideBox(box);
         });
-
+        
         $('body').live('click', function() {
             hideBox(box);
         });
-
+        
         box.click(function(event) {
             event.stopPropagation();
         });
-
-        var positionAndShowBox = function(box) {
-          var pos = elem.offset();
-          var left = pos.left + elem.outerWidth() - box.outerWidth();
-          if (left < pos.left) left = pos.left;
-          box.css({ left: left, top: (pos.top + elem.outerHeight()) });
-          showBox(box);
-        };
-
-        elem.click(function(event) {
-          event.stopPropagation();
-          if (!elem.is('input')) {
-            // element is not an input so probably a link or div which requires the color box to be shown
-            positionAndShowBox(box);
-          }
-        });
-
-        elem.focus(function() {
-          positionAndShowBox(box);
-        });
         
-        elem.blur(function(event) {
-            hideBox(box);
-        });
-
+        var positionAndShowBox = function(box) {
+            var pos = elem.offset();
+            var left = pos.left + elem.outerWidth() - box.outerWidth();
+            if (left < pos.left) {
+                left = pos.left;
+            }
+            box.css({
+                left: left,
+                top: (pos.top + elem.outerHeight()) 
+            });
+            showBox(box);
+        };
+        
         function hideBox(box) {
-            if (opts.hideEffect == 'fade')
+            if (opts.hideEffect == 'fade') {
                 box.fadeOut(opts.effectDuration);
-            else if (opts.hideEffect == 'slide')
+            } else if (opts.hideEffect == 'slide') {
                 box.slideUp(opts.effectDuration);
-            else
+            } else {
                 box.hide();
+            }
         }
 
         function showBox(box) {
@@ -127,5 +115,22 @@ $.fn.simpleColorPicker = function(options) {
                 box.show();
             }
         }
+
+        elem.click(function(event) {
+            event.stopPropagation();
+            if (!elem.is('input')) {
+                // element is not an input so probably a link or div which requires the color box to be shown
+                positionAndShowBox(box);
+            }
+        });
+
+        elem.focus(function() {
+          positionAndShowBox(box);
+        });
+        
+        elem.blur(function(event) {
+            hideBox(box);
+        });
+
     });
 };
