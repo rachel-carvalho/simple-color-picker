@@ -2,104 +2,233 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>simpleColorPicker jQuery plugin</title>
-	<link type="text/css" href="jquery.simple-color-picker.css" rel="stylesheet" />
-	<style type="text/css">
-		body { font-family: sans-serif; font-size: 12px; margin: 0px; }
-		h1 { font-size: 16px; margin: 0px; padding: 5px 5px; }
-		h2 { font-size: 14px; margin: 0px; padding: 5px 5px; }
-		h3 { font-size: 12px; margin: 0px; padding: 2px 0px; }
-		ul { list-style-type: none; padding: 0px; margin: 0px 10px; }
-		p { margin: 10px 0px; padding: 0px 5px; }
-		label { display: block; }
-		input#color { width: 150px; }
-		pre { font-family: monospace; display: block; margin: 5px; }
-	</style>
-    <script type="text/javascript" src="jquery-1.4.3.min.js"></script>
-    <script type="text/javascript" src="jquery.simple-color-picker.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('input#color').simpleColorPicker();
-            $('input#color2').simpleColorPicker({ colorsPerLine: 16 });
-            var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
-            $('input#color3').simpleColorPicker({ colors: colors });
-            $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
-            $('button#color5').simpleColorPicker({ onChangeColor: function(color) { $('label#color-result').text(color); } });
-        });
+  <title>simpleColorPicker jQuery plugin</title>
+  
+  <link rel="stylesheet" href="jquery.simple-color-picker.css" type="text/css" media="screen" charset="utf-8">
+  
+  <style type="text/css">
+    body { font-family: sans-serif; font-size: 12px; margin: 0px; }
+    h1 { font-size: 16px; margin: 0px; padding: 5px 5px; }
+    h2 { font-size: 14px; margin: 0px; padding: 5px 5px; }
+    h3 { font-size: 12px; margin: 0px; padding: 2px 0px; }
+    ul { list-style-type: none; padding: 0px; margin: 0px 10px; }
+    p { margin: 10px 0px; padding: 0px 5px; }
+    label { display: block; }
+    input#color { width: 150px; }
+    pre { font-family: monospace; display: block; margin: 5px; }
+  </style>
+  
+  <script src="jquery-1.6.3.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="jquery.tmpl.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="jquery.simple-color-picker.js" type="text/javascript" charset="utf-8"></script>
+  
+  <script type="text/javascript">
+    $(document).ready(function() {
+      
+      // simple version
+      $('input#color').simpleColorPicker();
+      
+      // additional opts
+      $('input#color2').simpleColorPicker({ colorsPerLine: 16 });
+      
+      // custom colors
+      var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
+      $('input#color3').simpleColorPicker({ colors: colors });
+      
+      // custom show/hide effects
+      $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
+      
+      // custom ux/ui
+      $('button#color5').simpleColorPicker({ onChangeColor: function(color) { $('label#color-result').text(color); } });
+      
+      // a little extra
+      
+      // ===================================
+      // = converts html color code to HSL =
+      // ===================================
+      var colorToHSL = function (color) {
+        var rgb, min, max, delta, h, s, l;
+        if (color.length == 7) {
+            rgb = [parseInt(color.substring(1, 3), 16) / 255,
+                    parseInt(color.substring(3, 5), 16) / 255,
+                    parseInt(color.substring(5, 7), 16) / 255];
+        } else if (color.length == 4) {
+            rgb = [parseInt(color.substring(1, 2), 16) / 15,
+                    parseInt(color.substring(2, 3), 16) / 15,
+                    parseInt(color.substring(3, 4), 16) / 15];
+        }
+
+        var r = rgb[0], 
+            g = rgb[1], 
+            b = rgb[2];
+        min = Math.min(r, Math.min(g, b));
+        max = Math.max(r, Math.max(g, b));
+        delta = max - min;
+        l = (min + max) / 2;
+        s = 0;
+        if (l > 0 && l < 1) {
+          s = delta / (l < 0.5 ? (2 * l) : (2 - 2 * l));
+        }
+        h = 0;
+        if (delta > 0) {
+          if (max == r && max != g) {
+            h += (g - b) / delta;
+          }
+          if (max == g && max != b) {
+            h += (2 + (b - r) / delta);
+          }
+          if (max == b && max != r) {
+            h += (4 + (r - g) / delta);
+          }
+          h /= 6;
+        }
+        return [h, s, l];
+      };
+      
+      $('input#color6').simpleColorPicker({
+        onChangeColor: function(color) {
+          $(this).css({
+              "background-color": color,
+              "color": colorToHSL(color)[2] > 0.5 ? '#000' : '#fff'
+          });
+        },
+        showEffect: 'slide',
+        hideEffect: 'slide'
+      });
+    });
     </script>
 </head>
 <body>
-	<h1>simpleColorPicker jQuery plugin</h1>
+  <h1>simpleColorPicker jQuery plugin</h1>
 
-	<p>A simple color picker jQuery plugin that appears as the user focuses the input.</p>
+  <p>A simple color picker jQuery plugin that appears as the user focuses the input.</p>
 
-	<p>Just attach the simpleColorPicker to an input text and when it gains focus the color palette appears aligned to its bottom right corner.</p>
+  <p>Just attach the simpleColorPicker to an input text and when it gains focus the color palette appears aligned to its bottom right corner.</p>
 
-	<p>Check out the latest version at <a href="http://github.com/rachel-carvalho/simple-color-picker">http://github.com/rachel-carvalho/simple-color-picker</a>.</p>
+  <p>Check out the latest version at <a href="http://github.com/rachel-carvalho/simple-color-picker">http://github.com/rachel-carvalho/simple-color-picker</a>.</p>
 
-	<h2>Live samples</h2>
-	<ul>
-		<li>
-			<h3>Default options</h3>
+  <h2>Live samples</h2>
+  <ul>
+    <li>
+      <h3>Default options</h3>
 
-			<label for="color">Choose a color:</label>
-			<input type="text" id="color" name="color" />
+      <label for="color">Choose a color:</label>
+      <input type="text" id="color" name="color" />
 
-			<pre>
+      <pre>
 $(document).ready(function() {
     $('input#color').simpleColorPicker();
 });
-			</pre>
-		</li>
-		<li>
-			<h3>More colors per line</h3>
+      </pre>
+    </li>
+    <li>
+      <h3>More colors per line</h3>
 
-			<label for="color2">Choose a color:</label>
-			<input type="text" id="color2" name="color2" />
+      <label for="color2">Choose a color:</label>
+      <input type="text" id="color2" name="color2" />
 
-			<pre>
+      <pre>
 $(document).ready(function() {
     $('input#color2').simpleColorPicker({ colorsPerLine: 16 });
 });
-			</pre>
-		</li>
-		<li>
-			<h3>Different colors</h3>
+      </pre>
+    </li>
+    <li>
+      <h3>Different colors</h3>
 
-			<label for="color3">Choose a color:</label>
-			<input type="text" id="color3" name="color3" />
+      <label for="color3">Choose a color:</label>
+      <input type="text" id="color3" name="color3" />
 
-			<pre>
+      <pre>
 $(document).ready(function() {
     var colors = ['#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'];
     $('input#color3').simpleColorPicker({ colors: colors });
 });
-			</pre>
-		</li>
-		<li>
-			<h3>Effects</h3>
+      </pre>
+    </li>
+    <li>
+      <h3>Effects</h3>
 
-			<label for="color4">Choose a color:</label>
-			<input type="text" id="color4" name="color4" />
+      <label for="color4">Choose a color:</label>
+      <input type="text" id="color4" name="color4" />
 
-			<pre>
+      <pre>
 $(document).ready(function() {
     $('input#color4').simpleColorPicker({ showEffect: 'fade', hideEffect: 'slide' });
 });
-			</pre>
-		</li>
-		<li>
-			<h3>Non-input elements</h3>
+      </pre>
+    </li>
+    <li>
+      <h3>Non-input elements</h3>
 
-			<label id="color-result">No color chosen yet</label>
-			<button id="color5">Choose a color</button>
+      <label id="color-result">No color chosen yet</label>
+      <button id="color5">Choose a color</button>
 
-			<pre>
+      <pre>
 $(document).ready(function() {
     $('button#color5').simpleColorPicker({ onChangeColor: function(color) { $('label#color-result').text(color); } });
 });
-			</pre>
-		</li>
-	</ul>
+      </pre>
+    </li>
+    <li>
+      <h3>Default options + extra</h3>
+
+      <label for="color">Choose a color:</label>
+      <input type="text" id="color6" name="color" />
+
+      <pre>
+// ===================================
+// = converts html color code to HSL =
+// ===================================
+var colorToHSL = function (color) {
+  var rgb, min, max, delta, h, s, l;
+  if (color.length == 7) {
+      rgb = [parseInt(color.substring(1, 3), 16) / 255,
+              parseInt(color.substring(3, 5), 16) / 255,
+              parseInt(color.substring(5, 7), 16) / 255];
+  } else if (color.length == 4) {
+      rgb = [parseInt(color.substring(1, 2), 16) / 15,
+              parseInt(color.substring(2, 3), 16) / 15,
+              parseInt(color.substring(3, 4), 16) / 15];
+  }
+
+  var r = rgb[0], 
+      g = rgb[1], 
+      b = rgb[2];
+  min = Math.min(r, Math.min(g, b));
+  max = Math.max(r, Math.max(g, b));
+  delta = max - min;
+  l = (min + max) / 2;
+  s = 0;
+  if (l > 0 && l < 1) {
+    s = delta / (l < 0.5 ? (2 * l) : (2 - 2 * l));
+  }
+  h = 0;
+  if (delta > 0) {
+    if (max == r && max != g) {
+      h += (g - b) / delta;
+    }
+    if (max == g && max != b) {
+      h += (2 + (b - r) / delta);
+    }
+    if (max == b && max != r) {
+      h += (4 + (r - g) / delta);
+    }
+    h /= 6;
+  }
+  return [h, s, l];
+};
+
+$('input#color6').simpleColorPicker({
+  onChangeColor: function(color) {
+    $(this).css({
+        "background-color": color,
+        "color": colorToHSL(color)[2] > 0.5 ? '#000' : '#fff'
+    });
+  }
+});
+      </pre>
+    </li>
+  </ul>
 </body>
 </html>
