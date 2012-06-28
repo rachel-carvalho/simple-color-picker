@@ -44,7 +44,7 @@ $.fn.simpleColorPicker = function(options) {
         box.hide();
 
         box.find('li.color-box').click(function() {
-            if (!txt.is('input')) {
+            if (txt.is('input')) {
               txt.val(opts.colors[this.id.substr(this.id.indexOf('-') + 1)]);
               txt.blur();
             }
