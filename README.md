@@ -9,6 +9,8 @@ Just attach the simpleColorPicker to an input text and when it gains focus the c
 
 ### Samples
 
+See them working live at http://rachel-carvalho.github.com/simple-color-picker.
+
 #### Default options
 
     $(document).ready(function() {
