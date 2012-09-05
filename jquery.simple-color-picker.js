@@ -12,7 +12,8 @@ $.fn.simpleColorPicker = function(options) {
 				, '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#073763', '#20124d', '#4C1130'],
         showEffect: '',
         hideEffect: '',
-        onChangeColor: false
+        onChangeColor: false,
+        prefix: false
     };
 
     var opts = $.extend(defaults, options);
@@ -22,7 +23,7 @@ $.fn.simpleColorPicker = function(options) {
 
         var colorsMarkup = '';
 
-        var prefix = txt.attr('id').replace(/-/g, '') + '_';
+        var prefix = setPrefix(txt);
 
         for(var i = 0; i < opts.colors.length; i++){
             var item = opts.colors[i];
@@ -98,6 +99,18 @@ $.fn.simpleColorPicker = function(options) {
                 box.slideDown();
             else
                 box.show();
+        }
+
+        function setPrefix(context) {
+          if (typeof opts.prefix === 'function') {
+            return opts.prefix.call(context) + "_";
+          }
+
+          if (typeof opts.prefix === 'string') {
+            return opts.prefix + '_';
+          }
+
+          return context.attr('id').replace(/-/g, '') + '_';
         }
     });
 };
