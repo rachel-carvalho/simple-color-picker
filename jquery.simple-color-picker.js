@@ -73,8 +73,8 @@ $.fn.simpleColorPicker = function(options) {
 		txt.click(function(event) {
 			event.stopPropagation();
 			if (!txt.is('input')) {
-    			// element is not an input so probably a link or div which requires the color box to be shown
-    			positionAndShowBox(box);
+				// element is not an input so probably a link or div which requires the color box to be shown
+				positionAndShowBox(box);
 			}
 		});
 
