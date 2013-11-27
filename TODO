@@ -1,4 +1,4 @@
-- tests
+- finish tests
 - update jquery support
 - stop supporting ie 6
 - replace clear: both by .first-in-line
