@@ -80,74 +80,127 @@ describe('Simple color picker', function() {
 		});
 	});
 
+	var test_jq_method = function(spy, elem) {
+		expect(spy).toHaveBeenCalled();
+		expect(spy.calls.count()).toEqual(1);
+		var recent = spy.calls.mostRecent();
+		expect(recent).not.toBe(undefined);
+		var obj = recent ? recent.object[0] : undefined;
+		expect(obj).toBe(elem[0]);
+	};
+
 	describe('behavior', function() {
 		var box = null;
 
-		beforeEach(function() {
-			txt.simpleColorPicker();
-			box = get_box();
-		});
-
-		describe('focusing input', function() {
-			it('positions color picker aligned to input right', function() {
-				txt.focus();
-				expect(box.offset().left + box.outerWidth()).toBe(txt.offset().left + txt.outerWidth());
-			});
-
-			it('or to left, if picker is wider than input', function() {
-				txt.width(10).focus();
-				expect(box.offset().left).toBe(txt.offset().left);
-			});
-
-			it('shows color picker', function() {
-				expect(box.is(':hidden')).toBeTruthy();
-				txt.focus();
-				expect(box.is(':hidden')).not.toBeTruthy();
-			});
-		});
-
-		describe('after picker is open', function() {
+		describe('default', function() {
 			beforeEach(function() {
-				txt.focus();
+				txt.simpleColorPicker();
+				box = get_box();
 			});
 
-			it('clicking outside closes it', function() {
-				expect(box.is(':hidden')).not.toBeTruthy();
-				$('body').click();
-				expect(box.is(':hidden')).toBeTruthy();
+			describe('focusing input', function() {
+				it('positions color picker aligned to input right', function() {
+					txt.focus();
+					expect(box.offset().left + box.outerWidth()).toBe(txt.offset().left + txt.outerWidth());
+				});
+
+				it('or to left, if picker is wider than input', function() {
+					txt.width(10).focus();
+					expect(box.offset().left).toBe(txt.offset().left);
+				});
+
+				it('shows color picker', function() {
+					expect(box.is(':hidden')).toBeTruthy();
+					txt.focus();
+					expect(box.is(':hidden')).not.toBeTruthy();
+				});
 			});
 
-			it('clicking another element closes it', function() {
-				expect(box.is(':hidden')).not.toBeTruthy();
-				var btn = $(document.createElement('button'));
-				$('body').append(btn);
-				btn.click();
-				expect(box.is(':hidden')).toBeTruthy();
-				btn.remove();
-			});
-
-			describe('clicking a color', function() {
-				var color_li = null;
-				var jq_hide_spy = null;
+			describe('after picker is open', function() {
 				beforeEach(function() {
-					jq_hide_spy = spyOn($.fn, 'hide').and.callThrough();
-					color_li = box.find('li.color-box:first');
-					color_li.click();
+					txt.focus();
 				});
 
-				it('fills the input with the right color code', function() {
-					expect(txt.val()).toBe(color_li.attr('title'));
-				});
-
-				it('hides the picker', function() {
+				it('clicking outside closes it', function() {
+					expect(box.is(':hidden')).not.toBeTruthy();
+					$('body').click();
 					expect(box.is(':hidden')).toBeTruthy();
 				});
 
-				it('by calling $.fn.hide on it', function() {
-					expect(jq_hide_spy).toHaveBeenCalled();
-					expect(jq_hide_spy.calls.count()).toEqual(1);
-					expect(jq_hide_spy.calls.mostRecent().object[0]).toBe(box[0]);
+				it('clicking another element closes it', function() {
+					expect(box.is(':hidden')).not.toBeTruthy();
+					var btn = $(document.createElement('button'));
+					$('body').append(btn);
+					btn.click();
+					expect(box.is(':hidden')).toBeTruthy();
+					btn.remove();
 				});
+
+				describe('clicking a color', function() {
+					var color_li = null;
+					var jq_hide_spy = null;
+					beforeEach(function() {
+						jq_hide_spy = spyOn($.fn, 'hide').and.callThrough();
+						color_li = box.find('li.color-box:first');
+						color_li.click();
+					});
+
+					it('fills the input with the right color code', function() {
+						expect(txt.val()).toBe(color_li.attr('title'));
+					});
+
+					it('hides the picker', function() {
+						expect(box.is(':hidden')).toBeTruthy();
+					});
+
+					it('by calling $.fn.hide on it', function() {
+						test_jq_method(jq_hide_spy, box);
+					});
+				});
+			});
+		});
+
+		var trigger_txt = function(opts, just_show) {
+			txt.simpleColorPicker(opts);
+
+			txt.focus();
+
+			if (!just_show)
+				get_box().find('li.color-box:first').click();
+		};
+
+		it('should call onChangeColor when specified', function() {
+			var opts = { onChangeColor: function(txt, color) {} };
+			var color_spy = spyOn(opts, 'onChangeColor').and.callThrough();
+
+			trigger_txt(opts);
+
+			expect(color_spy).toHaveBeenCalled();
+		});
+
+		describe('effects', function() {
+			it('should show with fade', function() {
+				var spy = spyOn($.fn, 'fadeIn').and.callThrough();
+				trigger_txt({showEffect: 'fade'}, true);
+				test_jq_method(spy, get_box());
+			});
+
+			it('should hide with fade', function() {
+				var spy = spyOn($.fn, 'fadeOut').and.callThrough();
+				trigger_txt({hideEffect: 'fade'});
+				test_jq_method(spy, get_box());
+			});
+
+			it('should show with slide', function() {
+				var spy = spyOn($.fn, 'slideDown').and.callThrough();
+				trigger_txt({showEffect: 'slide'}, true);
+				test_jq_method(spy, get_box());
+			});
+
+			it('should hide with slide', function() {
+				var spy = spyOn($.fn, 'slideUp').and.callThrough();
+				trigger_txt({hideEffect: 'slide'});
+				test_jq_method(spy, get_box());
 			});
 		});
 	});
