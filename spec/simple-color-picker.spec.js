@@ -128,7 +128,9 @@ describe('Simple color picker', function() {
 
 			describe('clicking a color', function() {
 				var color_li = null;
+				var jq_hide_spy = null;
 				beforeEach(function() {
+					jq_hide_spy = spyOn($.fn, 'hide').and.callThrough();
 					color_li = box.find('li.color-box:first');
 					color_li.click();
 				});
@@ -139,6 +141,12 @@ describe('Simple color picker', function() {
 
 				it('hides the picker', function() {
 					expect(box.is(':hidden')).toBeTruthy();
+				});
+
+				it('by calling $.fn.hide on it', function() {
+					expect(jq_hide_spy).toHaveBeenCalled();
+					expect(jq_hide_spy.calls.count()).toEqual(1);
+					expect(jq_hide_spy.calls.mostRecent().object[0]).toBe(box[0]);
 				});
 			});
 		});
