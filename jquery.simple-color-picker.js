@@ -54,7 +54,7 @@ $.fn.simpleColorPicker = function(options) {
 			hideBox(box);
 		});
 
-		$('body').live('click', function() {
+		$('body').on('click', function() {
 			hideBox(box);
 		});
 
