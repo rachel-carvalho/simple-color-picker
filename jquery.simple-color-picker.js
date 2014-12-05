@@ -12,7 +12,8 @@ $.fn.simpleColorPicker = function(options) {
 				, '#660000', '#783f04', '#7f6000', '#274e13', '#0c343d', '#073763', '#20124d', '#4C1130'],
 		showEffect: '',
 		hideEffect: '',
-		onChangeColor: false
+		onChangeColor: false,
+		includeMargins:false,
 	};
 
 	var opts = $.extend(defaults, options);
@@ -64,9 +65,9 @@ $.fn.simpleColorPicker = function(options) {
 
 		var positionAndShowBox = function(box) {
 			var pos = txt.offset();
-			var left = pos.left + txt.outerWidth() - box.outerWidth();
+			var left = pos.left + txt.outerWidth(opts.includeMargins) - box.outerWidth(opts.includeMargins);
 			if (left < pos.left) left = pos.left;
-			box.css({ left: left, top: (pos.top + txt.outerHeight()) });
+			box.css({ left: left, top: (pos.top + txt.outerHeight(opts.includeMargins)) });
 			showBox(box);
 		}
 
